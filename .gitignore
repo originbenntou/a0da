@@ -1,3 +1,5 @@
+.idea
+
 ### Terraform template
 # Local .terraform directories
 **/.terraform/*
