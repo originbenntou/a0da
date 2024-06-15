@@ -45,7 +45,7 @@ module "alb" {
 module "ecs" {
   source = "../../modules/ecs"
   app_name          = "nextjs-app-dev"
-  image             = "your-dockerhub-username/your-nextjs-app:latest"
+  image             = "388450459156.dkr.ecr.ap-northeast-1.amazonaws.com/a0demo-frontend:a21cb22"
   auth0_client_id   = var.auth0_client_id
   auth0_client_secret = var.auth0_client_secret
   auth0_domain      = var.auth0_domain

@@ -4,17 +4,16 @@ RUN mkdir /app
 
 WORKDIR /app
 
-COPY package.json .
-COPY next.config.js .
-COPY api-server.js .
-COPY .env.local .
+RUN apk update --no-cache && \
+    npm i -g pnpm
 
-RUN npm install
-RUN npm build
-
-COPY .next ./.next
-COPY public ./.public
 COPY . .
+
+RUN pnpm i && \
+    pnpm build
+
+#RUN npm install
+#RUN npm run build
 
 # ---------------
 
@@ -25,6 +24,9 @@ ENV API_PORT 3001
 
 WORKDIR /app
 
+RUN apk update --no-cache && \
+    npm i -g pnpm
+
 COPY --from=build /app/package.json .
 COPY --from=build /app/next.config.js .
 COPY --from=build /app/api-server.js .
@@ -32,9 +34,9 @@ COPY --from=build /app/.env.local .
 COPY --from=build /app/.next ./.next
 COPY --from=build /app/public ./public
 
-RUN npm install
+RUN pnpm install
 
 EXPOSE 3000
 EXPOSE 3001
 
-CMD npm start
+CMD pnpm start
