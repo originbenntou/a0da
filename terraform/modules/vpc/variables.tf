@@ -1,9 +1,19 @@
 variable "vpc_cidr" {
-  description = "The CIDR block for the VPC"
   type        = string
 }
 
-variable "subnet_cidr" {
-  description = "The CIDR block for the subnet"
+variable "subnet_cidr1" {
+  type        = string
+}
+
+variable "subnet_cidr2" {
+  type        = string
+}
+
+variable "az_a" {
+  type        = string
+}
+
+variable "az_c" {
   type        = string
 }

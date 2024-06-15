@@ -55,7 +55,3 @@ resource "aws_ecs_service" "main" {
     container_port   = 3000
   }
 }
-
-output "ecs_cluster_id" {
-  value = aws_ecs_cluster.main.id
-}
