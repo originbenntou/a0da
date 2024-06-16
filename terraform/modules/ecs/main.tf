@@ -39,6 +39,14 @@ resource "aws_ecs_task_definition" "main" {
           value = "3001"
         }
       ]
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          "awslogs-group"         = var.log_group_name
+          "awslogs-region"        = "ap-northeast-1"
+          "awslogs-stream-prefix" = "ecs"
+        }
+      }
     }
   ])
 }

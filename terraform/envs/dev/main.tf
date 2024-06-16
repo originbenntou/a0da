@@ -19,6 +19,23 @@ module "terraform_state_backend" {
   force_destroy                      = false
 }
 
+module "s3" {
+  source = "../../modules/s3"
+
+  bucket_name = "${local.environment}-${local.product_name}-frontend"
+  environment = local.environment
+  oai_arn     = module.cloudfront.oai_arn
+}
+
+module "cloudfront" {
+  source = "../../modules/cloudfront"
+
+  bucket_name        = module.s3.bucket_name
+  bucket_domain_name = module.s3.bucket_domain_name
+  environment        = local.environment
+  app_name           = local.product_name
+}
+
 module "vpc" {
   source = "../../modules/vpc"
 
@@ -34,35 +51,42 @@ module "security_groups" {
   vpc_id = module.vpc.vpc_id
 }
 
-module "alb" {
-  source = "../../modules/alb"
-  app_name         = "nextjs-app-dev"
-  vpc_id           = module.vpc.vpc_id
-  subnet_ids       = module.vpc.subnet_ids
-  security_group_id = module.security_groups.alb_sg_id
-}
-
-module "vpc_endpoint" {
-  source = "../../modules/vpc_endpoint"
-  vpc_id           = module.vpc.vpc_id
-  subnet_ids       = module.vpc.subnet_ids
-  route_table_ids  = [module.vpc.route_table_id]
-  alb_sg_id        = module.security_groups.alb_sg_id
-}
+# module "alb" {
+#   source = "../../modules/alb"
+#   app_name         = "nextjs-app-dev"
+#   vpc_id           = module.vpc.vpc_id
+#   subnet_ids       = module.vpc.subnet_ids
+#   security_group_id = module.security_groups.alb_sg_id
+# }
+#
+# module "vpc_endpoint" {
+#   source = "../../modules/vpc_endpoint"
+#   vpc_id           = module.vpc.vpc_id
+#   subnet_ids       = module.vpc.subnet_ids
+#   route_table_ids  = [module.vpc.route_table_id]
+#   alb_sg_id        = module.security_groups.alb_sg_id
+# }
 
 module "iam" {
   source = "../../modules/iam"
+  app_name = "nextjs-app-dev"
 }
 
-module "ecs" {
-  source = "../../modules/ecs"
-  app_name          = "nextjs-app-dev"
-  image             = "388450459156.dkr.ecr.ap-northeast-1.amazonaws.com/a0demo-frontend:latest"
-  auth0_client_id   = var.auth0_client_id
-  auth0_client_secret = var.auth0_client_secret
-  auth0_domain      = var.auth0_domain
-  subnet_ids        = module.vpc.subnet_ids
-  security_group_id = module.security_groups.ecs_sg_id
-  target_group_arn  = module.alb.target_group_arn
-  execution_role_arn = module.iam.ecs_task_execution_role_arn
-}
+# module "logs" {
+#   source = "../../modules/logs"
+#   app_name = "nextjs-app-dev"
+# }
+#
+# module "ecs" {
+#   source = "../../modules/ecs"
+#   app_name          = "nextjs-app-dev"
+#   image             = "388450459156.dkr.ecr.ap-northeast-1.amazonaws.com/a0demo-frontend:6bbe4ff"
+#   auth0_client_id   = var.auth0_client_id
+#   auth0_client_secret = var.auth0_client_secret
+#   auth0_domain      = var.auth0_domain
+#   subnet_ids        = module.vpc.subnet_ids
+#   security_group_id = module.security_groups.ecs_sg_id
+#   target_group_arn  = module.alb.target_group_arn
+#   execution_role_arn = module.iam.ecs_task_execution_role_arn
+#   log_group_name    = module.logs.log_group_name
+# }

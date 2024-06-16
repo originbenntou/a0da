@@ -33,3 +33,7 @@ variable "target_group_arn" {
 variable "execution_role_arn" {
   type        = string
 }
+
+variable "log_group_name" {
+  type        = string
+}

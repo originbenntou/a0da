@@ -10,7 +10,6 @@ variable "subnet_cidr2" {
   default = "10.32.2.0/24"
 }
 
-variable "auth0_client_id" {}
-variable "auth0_client_secret" {}
-variable "auth0_domain" {}
-
+# variable "auth0_client_id" {}
+# variable "auth0_client_secret" {}
+# variable "auth0_domain" {}

@@ -1,5 +1,5 @@
 resource "aws_iam_role" "ecs_task_execution" {
-  name = "a0demo-frontend-ecs-task-execution-role"
+  name = "${var.app_name}-ecs-task-execution-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -16,7 +16,7 @@ resource "aws_iam_role" "ecs_task_execution" {
 }
 
 resource "aws_iam_role_policy" "ecs_task_execution_policy" {
-  name   = "a0demo-frontend-ecs-task-execution-policy"
+  name   = "${var.app_name}-ecs-task-execution-policy"
   role   = aws_iam_role.ecs_task_execution.id
 
   policy = jsonencode({
@@ -28,13 +28,7 @@ resource "aws_iam_role_policy" "ecs_task_execution_policy" {
           "ecr:GetDownloadUrlForLayer",
           "ecr:BatchGetImage",
           "ecr:BatchCheckLayerAvailability",
-          "ecr:GetAuthorizationToken"  # このアクションを追加
-        ],
-        Resource = "*"
-      },
-      {
-        Effect = "Allow",
-        Action = [
+          "ecr:GetAuthorizationToken",
           "logs:CreateLogStream",
           "logs:PutLogEvents"
         ],
