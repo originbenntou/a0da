@@ -1,7 +1,3 @@
-variable "app_name" {
-  type        = string
-}
-
 variable "vpc_id" {
   type        = string
 }
@@ -10,6 +6,10 @@ variable "subnet_ids" {
   type        = list(string)
 }
 
-variable "security_group_id" {
+variable "route_table_ids" {
+  type        = list(string)
+}
+
+variable "alb_sg_id" {
   type        = string
 }

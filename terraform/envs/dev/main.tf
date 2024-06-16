@@ -1,5 +1,5 @@
 locals {
-  product = "a0demo"
+  product_name = "a0demo"
   environment  = "dev"
 }
 
@@ -9,7 +9,7 @@ provider "aws" {
 
 module "terraform_state_backend" {
   source     = "cloudposse/tfstate-backend/aws"
-  namespace  = local.product
+  namespace  = local.product_name
   stage      = local.environment
   name       = "terraform"
   attributes = ["states"]
@@ -42,14 +42,27 @@ module "alb" {
   security_group_id = module.security_groups.alb_sg_id
 }
 
+module "vpc_endpoint" {
+  source = "../../modules/vpc_endpoint"
+  vpc_id           = module.vpc.vpc_id
+  subnet_ids       = module.vpc.subnet_ids
+  route_table_ids  = [module.vpc.route_table_id]
+  alb_sg_id        = module.security_groups.alb_sg_id
+}
+
+module "iam" {
+  source = "../../modules/iam"
+}
+
 module "ecs" {
   source = "../../modules/ecs"
   app_name          = "nextjs-app-dev"
-  image             = "388450459156.dkr.ecr.ap-northeast-1.amazonaws.com/a0demo-frontend:a21cb22"
+  image             = "388450459156.dkr.ecr.ap-northeast-1.amazonaws.com/a0demo-frontend:latest"
   auth0_client_id   = var.auth0_client_id
   auth0_client_secret = var.auth0_client_secret
   auth0_domain      = var.auth0_domain
   subnet_ids        = module.vpc.subnet_ids
-  security_group_id = module.security_groups.alb_sg_id
+  security_group_id = module.security_groups.ecs_sg_id
   target_group_arn  = module.alb.target_group_arn
+  execution_role_arn = module.iam.ecs_task_execution_role_arn
 }
