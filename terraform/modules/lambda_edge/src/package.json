@@ -1,0 +1,10 @@
+{
+  "name": "index",
+  "version": "1.0.0",
+  "description": "Lambda@Edge function",
+  "main": "index.js",
+  "dependencies": {
+    "jsonwebtoken": "^8.5.1",
+    "jwks-rsa": "^2.0.5"
+  }
+}

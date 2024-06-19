@@ -27,6 +27,11 @@ module "s3" {
   oai_arn     = module.cloudfront.oai_arn
 }
 
+module "lambda_edge" {
+  source  = "../../modules/lambda_edge"
+  app_name = local.product_name
+}
+
 module "cloudfront" {
   source = "../../modules/cloudfront"
 
@@ -34,6 +39,7 @@ module "cloudfront" {
   bucket_domain_name = module.s3.bucket_domain_name
   environment        = local.environment
   app_name           = local.product_name
+  lambda_edge_arn    = module.lambda_edge.lambda_edge_function_arn
 }
 
 module "vpc" {

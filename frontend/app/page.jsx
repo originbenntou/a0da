@@ -2,15 +2,12 @@
 
 import React from 'react';
 
-import Hero from '../components/Hero';
-import Content from '../components/Content';
+import Demo from '../components/Demo';
 
 export default function Index() {
   return (
     <>
-      <Hero />
-      <hr />
-      <Content />
+      <Demo />
     </>
   );
 }
